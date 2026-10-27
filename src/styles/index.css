@@ -1,16 +1,177 @@
-/* Estilos mínimos do Dia 1 (apenas para a estrutura ficar legível).
-   A estilização completa e a responsividade ficam para o Dia 2. */
+:root {
+  --fundo: #fff0f2;
+  --superficie: #ffffff;
+  --chocolate: #3e2223;
+  --morango: #c73550;
+  --morango-escuro: #a52a42;
+  --pistache: #d4e6c3;
+  --borda: #f1d2d8;
+  --texto-suave: #7a5a5c;
+  --raio: 18px;
+  --altura-header: 64px; 
+}
+
+html, body { overscroll-behavior-y: none; }
+
 * { box-sizing: border-box; }
-body { margin: 0; font-family: system-ui, sans-serif; color: #3b2a2a; background: #fff8f5; }
-.header { padding: 1.5rem 1rem; text-align: center; background: #f6d4dc; }
-.header h1 { margin: 0; }
-.layout { display: grid; gap: 1rem; padding: 1rem; }
-.product-list { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
-.product-card { background: #fff; border-radius: 8px; overflow: hidden; border: 1px solid #eadada; }
-.product-card img { width: 100%; height: 160px; object-fit: cover; display: block; }
-.product-card__info { padding: 0.75rem; display: grid; gap: 0.4rem; }
-.product-card h3 { margin: 0; }
-.product-card p { margin: 0; font-size: 0.9rem; }
-.cart { background: #fff; border: 1px solid #eadada; border-radius: 8px; padding: 1rem; height: fit-content; }
-.cart__total { display: flex; justify-content: space-between; margin-top: 1rem; }
-@media (min-width: 900px) { .layout { grid-template-columns: 1fr 320px; } }
+
+body {
+  margin: 0;
+  font-family: 'Nunito', system-ui, sans-serif;
+  color: var(--chocolate);
+  background: var(--fundo);
+  line-height: 1.45;
+}
+
+h1, h2, h3 { font-family: 'Fredoka', 'Nunito', sans-serif; margin: 0; }
+
+img { max-width: 100%; display: block; }
+
+:focus-visible { outline: 3px solid var(--morango); outline-offset: 2px; }
+
+/* ---------- Cabeçalho (glacê escorrendo) ---------- */
+.header {
+  position: relative;
+  background: var(--chocolate);
+  color: #ffe3e8;
+  text-align: center;
+  padding: 2rem 1rem 1.6rem;
+  margin-bottom: 1.4rem;
+}
+.header h1 { font-size: clamp(1.7rem, 6vw, 2.8rem); font-weight: 700; }
+.header p { margin: 0.3rem 0 0; color: #f3bcc7; }
+.header::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: -14px;
+  height: 14px;
+  background:
+    radial-gradient(circle at 14px 0, var(--chocolate) 13px, transparent 14px) repeat-x;
+  background-size: 28px 14px;
+}
+
+/* ---------- Layout ---------- */
+.layout {
+  display: grid;
+  gap: 1.5rem;
+  padding: 1rem 1rem 6rem; /* espaço p/ o botão fixo no celular */
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.product-list {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  align-content: start;
+}
+
+/* ---------- Cards ---------- */
+.product-card {
+  background: var(--superficie);
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.product-card img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; background: var(--borda); }
+.product-card__info { padding: 0.9rem; display: flex; flex-direction: column; gap: 0.4rem; flex: 1; }
+.product-card h3 { font-size: 1.15rem; }
+.product-card p { margin: 0; font-size: 0.92rem; color: var(--texto-suave); flex: 1; }
+.product-card__footer { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; margin-top: 0.4rem; }
+.product-card__footer strong { font-family: 'Fredoka', sans-serif; font-size: 1.15rem; }
+
+/* ---------- Botões ---------- */
+.btn {
+  display: inline-block;
+  border: 0;
+  border-radius: 999px;
+  background: var(--morango);
+  color: #fff;
+  font: 700 0.92rem 'Nunito', sans-serif;
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+.btn:hover { background: var(--morango-escuro); }
+.btn:disabled { background: #d9c4c8; cursor: not-allowed; }
+.btn--wide { width: 100%; padding: 0.85rem 1rem; margin-top: 0.8rem; }
+
+.link-btn {
+  background: none; border: 0; padding: 0;
+  color: var(--morango-escuro); font: 600 0.85rem 'Nunito', sans-serif;
+  text-decoration: underline; cursor: pointer;
+}
+
+/* ---------- Carrinho ---------- */
+.cart {
+  background: var(--superficie);
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+  padding: 1rem;
+  /* celular: gaveta que sobe de baixo */
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  max-height: 85vh;
+  overflow-y: auto;
+  border-radius: var(--raio) var(--raio) 0 0;
+  transform: translateY(105%);
+  transition: transform 0.25s ease;
+  z-index: 30;
+}
+.cart--open { transform: translateY(0); }
+
+.cart__head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem; }
+.cart__head h2 { font-size: 1.3rem; }
+.cart__empty { color: var(--texto-suave); margin: 1rem 0; }
+.cart__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.8rem; }
+.cart__total {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 1rem; padding: 0.7rem 0.9rem;
+  background: var(--pistache); border-radius: 12px;
+  font-size: 1.1rem;
+}
+.cart__total strong { font-family: 'Fredoka', sans-serif; font-size: 1.3rem; }
+.cart__clear { display: block; margin: 0.8rem auto 0; }
+
+.cart-item { display: grid; grid-template-columns: 56px 1fr auto; gap: 0.7rem; align-items: start; }
+.cart-item img { width: 56px; height: 56px; object-fit: cover; border-radius: 10px; }
+.cart-item__info { display: flex; flex-direction: column; gap: 0.2rem; min-width: 0; }
+.cart-item__unit { font-size: 0.8rem; color: var(--texto-suave); }
+.cart-item__side { display: flex; flex-direction: column; align-items: flex-end; gap: 0.3rem; }
+
+.qty { display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 0.2rem; }
+.qty button {
+  width: 30px; height: 30px; border-radius: 50%;
+  border: 1px solid var(--borda); background: var(--fundo);
+  font-size: 1.1rem; line-height: 1; cursor: pointer; color: var(--chocolate);
+}
+.qty button:hover { background: var(--borda); }
+.qty span { min-width: 1.5ch; text-align: center; font-weight: 700; }
+
+/* Botão fixo (só celular) + fundo escurecido */
+.cart-toggle {
+  position: fixed; left: 1rem; right: 1rem; bottom: 1rem; z-index: 20;
+  border: 0; border-radius: 999px; padding: 0.9rem 1rem;
+  background: var(--chocolate); color: #fff;
+  font: 700 1rem 'Nunito', sans-serif; cursor: pointer;
+}
+.backdrop { position: fixed; inset: 0; background: rgba(62, 34, 35, 0.45); z-index: 25; }
+
+/* ---------- Desktop: carrinho vira coluna lateral ---------- */
+@media (min-width: 900px) {
+  .layout { grid-template-columns: 1fr 340px; padding-bottom: 2rem; }
+  .cart {
+    position: sticky; top: 1rem; align-self: start;
+    transform: none; max-height: calc(100vh - 2rem);
+    border-radius: var(--raio); z-index: auto;
+  }
+  .cart__close, .cart-toggle, .backdrop { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cart, .btn { transition: none; }
+}

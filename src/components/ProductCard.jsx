@@ -1,7 +1,11 @@
-// Componente de apresentação: recebe os dados do produto por props.
-// TODO (Dia 2): ligar o botão ao CartContext.
+import { useCart } from '../context/CartContext.jsx'
+import { formatarPreco } from '../utils/formatarPreco.js'
+
 export default function ProductCard({ produto }) {
-  const { nome, descricao, preco, imagem } = produto
+  const { id, nome, descricao, preco, imagem } = produto
+  const { itens, adicionarItem } = useCart()
+
+  const noCarrinho = itens.find((item) => item.id === id)
 
   return (
     <article className="product-card">
@@ -9,8 +13,12 @@ export default function ProductCard({ produto }) {
       <div className="product-card__info">
         <h3>{nome}</h3>
         <p>{descricao}</p>
-        <strong>R$ {preco.toFixed(2).replace('.', ',')}</strong>
-        <button type="button">Adicionar ao carrinho</button>
+        <div className="product-card__footer">
+          <strong>{formatarPreco(preco)}</strong>
+          <button type="button" className="btn" onClick={() => adicionarItem(id)}>
+            {noCarrinho ? `Adicionar mais (${noCarrinho.quantidade})` : 'Adicionar'}
+          </button>
+        </div>
       </div>
     </article>
   )
